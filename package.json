@@ -11,6 +11,7 @@
     "format": "prettier .  --write"
   },
   "dependencies": {
+    "ant-design-vue": "^3.2.10",
     "vue": "^3.2.37"
   },
   "devDependencies": {
