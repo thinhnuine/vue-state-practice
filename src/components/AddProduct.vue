@@ -1,7 +1,10 @@
 <template>
-  <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
+  <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol" @submit="handleSubmit">
     <a-form-item label="Title">
       <a-input v-model:value="formState.title" />
+      <div v-for="error of v$.title.$errors" :key="error.$uid" class="input-errors">
+        <div class="error-msg">{{ error.$message }}</div>
+      </div>
     </a-form-item>
     <a-form-item label="Price">
       <a-input v-model:value="formState.price" />
@@ -13,45 +16,49 @@
       <a-textarea v-model:value="formState.category" type="textarea" />
     </a-form-item>
     <a-form-item>
-      <a-button type="primary" @click="createProduct" :loading="loading">Add product</a-button>
+      <a-button html-type="submit" type="primary" :loading="loading">Add product</a-button>
       <a-button style="margin-left: 10px"><router-link to="/products">Cancel</router-link></a-button>
     </a-form-item>
   </a-form>
 </template>
-<script lang="ts" setup>
-import { reactive, ref } from 'vue'
-import axios from 'axios'
-import { message } from 'ant-design-vue'
-import router from '../router'
 
-type FormState = {
-  title: string
-  price: string
-  description: string
-  category: string
-}
+<script setup>
+import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useFetcher } from '../compositions/useFetcher'
+import { createProduct } from '../api'
+import useVuelidate from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 
 const labelCol = ref({ style: { width: '150px' } })
 const wrapperCol = ref({ style: { width: '350px' } })
-const loading = ref(false)
-const formState: FormState = reactive({
+const router = useRouter()
+const formState = reactive({
   title: '',
   price: '',
   description: '',
   category: '',
 })
 
-const createProduct = async () => {
-  try {
-    loading.value = true
-    await axios.post('https://fakestoreapi.com/products', formState)
-    message.success('Successful create product')
-    loading.value = false
-    router.push({ path: '/products' })
-  } catch (error) {
-    message.error('Error when create product')
-    loading.value = false
-    console.log(error)
+const rules = {
+  title: { required },
+  price: { required },
+  description: { required },
+  category: { required },
+}
+
+const v$ = useVuelidate(rules, formState)
+
+const { loading, error, getData } = useFetcher(createProduct)
+
+const handleSubmit = async () => {
+  const isFormCorrect = await v$.value.$validate()
+  if (!isFormCorrect) return
+  await getData({ ...formState })
+  if (!error.value) {
+    router.push('/products')
+  } else {
+    console.error(error.value)
   }
 }
 </script>
