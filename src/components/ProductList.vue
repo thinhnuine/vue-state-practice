@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, h } from 'vue'
 import axios from 'axios'
 
 type ProductItem = {
@@ -35,7 +35,23 @@ const columns = ref([
     dataIndex: 'category',
     key: 'category',
   },
+  // {
+  //   title: 'Event',
+  //   customRender({ record, index }) {
+  //     return h(
+  //       'button',
+  //       {
+  //         onClick: () => onRowButtonClick(record),
+  //       },
+  //       'click'
+  //     )
+  //   },
+  // },
 ])
+
+// const onRowButtonClick = (record) => {
+//   alert(`${record.name} clicked`)
+// }
 
 function getListProduct() {
   axios

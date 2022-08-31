@@ -2,18 +2,27 @@
   <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol" @submit="handleSubmit">
     <a-form-item label="Title">
       <a-input v-model:value="formState.title" />
-      <div v-for="error of v$.title.$errors" :key="error.$uid" class="input-errors">
-        <div class="error-msg">{{ error.$message }}</div>
+      <div v-for="error of v$.title.$errors" :key="error.$uid">
+        <p class="error-msg text-[#FF0000] my-1">{{ error.$message }}</p>
       </div>
     </a-form-item>
     <a-form-item label="Price">
       <a-input v-model:value="formState.price" />
+      <div v-for="error of v$.price.$errors" :key="error.$uid">
+        <p class="error-msg text-[#FF0000] my-1">{{ error.$message }}</p>
+      </div>
     </a-form-item>
     <a-form-item label="Description">
-      <a-input v-model:value="formState.description" />
+      <a-textarea v-model:value="formState.description" :rows="8" />
+      <div v-for="error of v$.description.$errors" :key="error.$uid">
+        <p class="error-msg text-[#FF0000] my-1">{{ error.$message }}</p>
+      </div>
     </a-form-item>
     <a-form-item label="Category">
-      <a-textarea v-model:value="formState.category" type="textarea" />
+      <a-input v-model:value="formState.category" type="textarea" />
+      <div v-for="error of v$.category.$errors" :key="error.$uid">
+        <p class="error-msg text-[#FF0000] my-1">{{ error.$message }}</p>
+      </div>
     </a-form-item>
     <a-form-item>
       <a-button html-type="submit" type="primary" :loading="loading">Add product</a-button>
@@ -28,7 +37,7 @@ import { useRouter } from 'vue-router'
 import { useFetcher } from '../compositions/useFetcher'
 import { createProduct } from '../api'
 import useVuelidate from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
+import { required, integer, minValue, maxLength } from '@vuelidate/validators'
 
 const labelCol = ref({ style: { width: '150px' } })
 const wrapperCol = ref({ style: { width: '350px' } })
@@ -41,10 +50,10 @@ const formState = reactive({
 })
 
 const rules = {
-  title: { required },
-  price: { required },
+  title: { required, maxLength: maxLength(25) },
+  price: { required, integer, minValue: minValue(0) },
   description: { required },
-  category: { required },
+  category: { required, maxLength: maxLength(25) },
 }
 
 const v$ = useVuelidate(rules, formState)
