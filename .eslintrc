@@ -6,5 +6,9 @@
   "rules": {
     // override/add rules settings here, such as:
     // 'vue/no-unused-vars': 'error'
+  },
+  "parserOptions": {
+    // Required for certain syntax usages
+    "ecmaVersion": 2020
   }
 }
