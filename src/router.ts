@@ -8,10 +8,10 @@ const routes = [
     path: '/products',
     component: ListProduct,
   },
-  // {
-  //   path: '/products/:id',
-  //   component: ListProduct,
-  // },
+  {
+    path: '/products/:id',
+    component: AddProduct,
+  },
   {
     path: '/products/add',
     component: AddProduct,
