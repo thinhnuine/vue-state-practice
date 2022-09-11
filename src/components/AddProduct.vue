@@ -70,24 +70,23 @@ const rules = {
 
 const v$ = useVuelidate(rules, formState)
 
-const { loading: loadingOnCreate, getData: addDataProduct, error: errorOnCreate } = useFetcher(createProduct)
-const { loading: loadingOnUpdate, getData: editDataProduct, error: errorOnUpdate } = useFetcher(editProduct)
-const { loading: loadingGetProduct, getData: getDataProduct, data } = useFetcher(getProduct)
+const {
+  loading: loadingOnCreate,
+  execute: upsertProduct,
+  error: errorOnUpsert,
+} = useFetcher(id ? editProduct : createProduct)
+const { loading: loadingGetProduct, execute: getDataProduct, data } = useFetcher(getProduct)
 
 const handleSubmit = async () => {
   const isFormCorrect = await v$.value.$validate()
   if (!isFormCorrect) return
-  if (id) {
-    await editDataProduct(formState.value)
-  } else {
-    await addDataProduct(formState.value)
-  }
-  if (!errorOnCreate.value || !errorOnUpdate.value) {
-    message.success('Successful')
-    router.push('/products')
-  } else {
-    console.error(errorOnCreate.value || errorOnUpdate.value)
+  await upsertProduct(formState.value, id)
+  if (errorOnUpsert.value) {
     message.error('Error')
+  } else {
+    router.push('/products')
+    console.error(errorOnUpsert.value)
+    message.success('Successful')
   }
 }
 
@@ -95,7 +94,7 @@ onMounted(async () => {
   if (id && id !== 'add') {
     try {
       await getDataProduct(id)
-      formState.value = { ...data.value.data }
+      formState.value = { ...data.value }
     } catch (error) {
       console.log(error)
     }

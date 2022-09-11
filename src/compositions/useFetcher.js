@@ -1,14 +1,15 @@
 import { ref } from 'vue'
 export function useFetcher(fetcher) {
-  const data = ref({})
+  const data = ref(null)
   const loading = ref(false)
   const error = ref(null)
-  const getData = async (...rest) => {
+  const execute = async (...rest) => {
     loading.value = true
     data.value = {}
     error.value = null
     try {
-      data.value = await fetcher(...rest)
+      const res = await fetcher(...rest)
+      data.value = res.data
     } catch (err) {
       error.value = err
     }
@@ -18,6 +19,6 @@ export function useFetcher(fetcher) {
     data,
     loading,
     error,
-    getData,
+    execute,
   }
 }

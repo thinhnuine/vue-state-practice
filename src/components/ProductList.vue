@@ -1,12 +1,15 @@
 <template>
   <div class="mx-10 my-10">
-    <div v-if="loading" class="text-center">
+    <div v-if="loadingGetProducts" class="text-center">
       <a-spin size="large" />
     </div>
     <div v-else class="text-center my-5">
-      <a-button><router-link to="/products/add">Add new product</router-link></a-button>
+      <a-space>
+        <a-button><router-link to="/products/add">Add new product</router-link></a-button>
+        <a-select class="w-[120px]" :options="optionsSort" placeholder="Sort" @change="handleChange" />
+      </a-space>
     </div>
-    <a-table v-if="!loading && data" :data-source="data" :columns="columns">
+    <a-table v-if="!loadingGetProducts" :data-source="products" :columns="columns">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <span>
@@ -17,21 +20,20 @@
         </template>
       </template></a-table
     >
-    <p v-else-if="!loading && !data">Don't have data</p>
     <p v-if="error" class="text-[#FF0000]">{{ error }}</p>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-const data = ref(null)
-const loading = ref(true)
-const loadingOnDelete = ref(false)
-const errorMessage = ref(null)
+import { useFetcher } from '../compositions/useFetcher'
+import { deleteProduct, getProducts } from '../api'
 const router = useRouter()
+
+const { loading: loadingOnDelete, execute: deleteProductAction, error: errorOnDelete } = useFetcher(deleteProduct)
+const { loading: loadingGetProducts, execute: getProductsAction, data: products } = useFetcher(getProducts)
 
 const columns = ref([
   {
@@ -60,17 +62,19 @@ const columns = ref([
   },
 ])
 
-const getListProduct = () => {
-  axios
-    .get('https://fakestoreapi.com/products')
-    .then((res) => (data.value = res.data))
-    .catch((error) => {
-      console.error(error)
-      errorMessage.value = error
-    })
-    .finally(() => {
-      loading.value = false
-    })
+const optionsSort = ref([
+  {
+    value: 'asc',
+    label: 'ASC',
+  },
+  {
+    value: 'desc',
+    label: 'DESC',
+  },
+])
+
+const getListProduct = async () => {
+  await getProductsAction()
 }
 
 const handleEditProduct = (id) => {
@@ -78,19 +82,16 @@ const handleEditProduct = (id) => {
 }
 
 const handleDeleteProduct = async (id) => {
-  loadingOnDelete.value = true
-  try {
-    await axios.delete(`https://fakestoreapi.com/products/${id}`)
-    data.value = data.value.filter((item) => item.id !== id)
+  await deleteProductAction(id)
+  products.value = products.value.filter((item) => item.id !== id)
+  if (!errorOnDelete) {
+    message.error('Delete error')
+  } else {
     message.success('Delete successful')
-  } catch (error) {
-    console.log(error)
-    message.error('Error when delete')
   }
-  loadingOnDelete.value = false
 }
 
-onMounted(() => {
-  getListProduct()
+onMounted(async () => {
+  await getListProduct()
 })
 </script>
