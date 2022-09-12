@@ -1,5 +1,8 @@
 import axios from 'axios'
 
+export const login = (formState) => {
+  return axios.post(`https://fakestoreapi.com/auth/login`, formState)
+}
 export const getProduct = (id) => {
   return axios.get(`https://fakestoreapi.com/products/${id}`)
 }

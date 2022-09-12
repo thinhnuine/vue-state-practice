@@ -7,6 +7,7 @@
       <a-space>
         <a-button><router-link to="/products/add">Add new product</router-link></a-button>
         <a-select class="w-[120px]" :options="optionsSort" placeholder="Sort" @change="handleChange" />
+        <a-button type="danger" @click="handleLogout">Log out</a-button>
       </a-space>
     </div>
     <a-table v-if="!loadingGetProducts" :data-source="products" :columns="columns">
@@ -79,6 +80,11 @@ const getListProduct = async () => {
 
 const handleEditProduct = (id) => {
   router.push(`/products/${id}`)
+}
+
+const handleLogout = () => {
+  localStorage.removeItem('user-token')
+  router.push('/login')
 }
 
 const handleDeleteProduct = async (id) => {
