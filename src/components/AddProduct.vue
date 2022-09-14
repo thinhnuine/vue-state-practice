@@ -29,7 +29,7 @@
         </div>
       </a-form-item>
       <a-form-item class="text-center">
-        <a-button html-type="submit" type="primary" :loading="loadingOnCreate || loadingOnUpdate">{{
+        <a-button html-type="submit" type="primary" :loading="loadingOnUpsert">{{
           id ? 'Edit product' : 'Add product'
         }}</a-button>
         <a-button style="margin-left: 10px"><router-link to="/products">Cancel</router-link></a-button>
@@ -71,7 +71,7 @@ const rules = {
 const v$ = useVuelidate(rules, formState)
 
 const {
-  loading: loadingOnCreate,
+  loading: loadingOnUpsert,
   execute: upsertProduct,
   error: errorOnUpsert,
 } = useFetcher(id ? editProduct : createProduct)

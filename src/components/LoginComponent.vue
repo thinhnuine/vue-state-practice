@@ -7,7 +7,6 @@
       name="basic"
       autocomplete="off"
       @finish="onFinish"
-      @finishFailed="onFinishFailed"
     >
       <a-form-item
         label="Username"
@@ -53,7 +52,9 @@ const onFinish = async (values) => {
     message.error('Username or password is incorrect')
     return
   }
-  localStorage.setItem('user-token', data.token)
+  if (data.value) {
+    localStorage.setItem('user-token', data.value.token)
+  }
   router.push('/products')
 }
 </script>

@@ -23,6 +23,12 @@ export const deleteProduct = (id) => {
   return axios.delete(`https://fakestoreapi.com/products/${id}`)
 }
 
-export const sortProduct = (type) => {
-  return axios.get(`https://fakestoreapi.com/products?sort=${type}`)
+export const filterProduct = (sort, category) => {
+  if (sort && category) {
+    return axios.get(`https://fakestoreapi.com/products/category/${category}?sort=${sort}`)
+  } else if (sort) {
+    return axios.get(`https://fakestoreapi.com/products?sort=${sort}`)
+  } else {
+    return axios.get(`https://fakestoreapi.com/products/category/${category}`)
+  }
 }

@@ -35,6 +35,9 @@ router.beforeEach(async (to) => {
   if (authRequired && !user) {
     return '/login'
   }
+  if (!authRequired && user) {
+    return '/products'
+  }
 })
 
 export default router

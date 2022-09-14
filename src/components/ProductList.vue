@@ -6,7 +6,8 @@
     <div v-else class="text-center my-5">
       <a-space>
         <a-button><router-link to="/products/add">Add new product</router-link></a-button>
-        <a-select class="w-[120px]" :options="optionsSort" placeholder="Sort" @change="handleChange" />
+        <a-select v-model:value="valueCategory" class="w-[120px]" :options="optionsCategory" placeholder="Category" />
+        <a-select v-model:value="valueSort" class="w-[120px]" :options="optionsSort" placeholder="Sort" />
         <a-button type="danger" @click="handleLogout">Log out</a-button>
       </a-space>
     </div>
@@ -26,16 +27,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useFetcher } from '../compositions/useFetcher'
-import { deleteProduct, getProducts } from '../api'
-const router = useRouter()
+import { deleteProduct, getProducts, filterProduct } from '../api'
 
 const { loading: loadingOnDelete, execute: deleteProductAction, error: errorOnDelete } = useFetcher(deleteProduct)
 const { loading: loadingGetProducts, execute: getProductsAction, data: products } = useFetcher(getProducts)
-
 const columns = ref([
   {
     title: 'ID',
@@ -62,6 +61,9 @@ const columns = ref([
     key: 'action',
   },
 ])
+const router = useRouter()
+const valueSort = ref(undefined)
+const valueCategory = ref(undefined)
 
 const optionsSort = ref([
   {
@@ -71,6 +73,25 @@ const optionsSort = ref([
   {
     value: 'desc',
     label: 'DESC',
+  },
+])
+
+const optionsCategory = ref([
+  {
+    value: 'jewelery',
+    label: 'Jewelery',
+  },
+  {
+    value: 'electronic',
+    label: 'Electronic',
+  },
+  {
+    value: "women's clothing",
+    label: "Women's clothing",
+  },
+  {
+    value: "men's clothing",
+    label: "Men's clothing",
   },
 ])
 
@@ -86,6 +107,11 @@ const handleLogout = () => {
   localStorage.removeItem('user-token')
   router.push('/login')
 }
+
+watchEffect(async () => {
+  const response = await filterProduct(valueSort.value || '', valueCategory.value ?? '')
+  products.value = response.data
+})
 
 const handleDeleteProduct = async (id) => {
   await deleteProductAction(id)
