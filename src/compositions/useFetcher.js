@@ -5,7 +5,7 @@ export function useFetcher(fetcher) {
   const error = ref(null)
   const execute = async (...rest) => {
     loading.value = true
-    data.value = {}
+    data.value = null
     error.value = null
     try {
       const res = await fetcher(...rest)

@@ -1,4 +1,5 @@
 <template>
+  <header-component />
   <div class="m-10 w-2/3 ml-auto mr-auto">
     <div v-if="loadingGetProduct" class="text-center">
       <a-spin size="large" />
@@ -32,7 +33,7 @@
         <a-button html-type="submit" type="primary" :loading="loadingOnUpsert">{{
           id ? 'Edit product' : 'Add product'
         }}</a-button>
-        <a-button style="margin-left: 10px"><router-link to="/products">Cancel</router-link></a-button>
+        <a-button style="margin-left: 10px"><router-link to="/">Cancel</router-link></a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -46,6 +47,7 @@ import { createProduct, getProduct, editProduct } from '../api'
 import useVuelidate from '@vuelidate/core'
 import { required, minValue } from '@vuelidate/validators'
 import { message } from 'ant-design-vue'
+import HeaderComponent from './HeaderComponent.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -84,7 +86,7 @@ const handleSubmit = async () => {
   if (errorOnUpsert.value) {
     message.error('Error')
   } else {
-    router.push('/products')
+    router.push('/')
     console.error(errorOnUpsert.value)
     message.success('Successful')
   }

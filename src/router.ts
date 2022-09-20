@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ListProduct from './components/ProductList.vue'
 import AddProduct from './components/AddProduct.vue'
 import LoginComponent from './components/LoginComponent.vue'
+import CartComponent from './components/CartComponent.vue'
+import PageNotFound from './components/PageNotFound.vue'
 
 const routes = [
   {
@@ -10,7 +12,7 @@ const routes = [
     component: LoginComponent,
   },
   {
-    path: '/products',
+    path: '/',
     component: ListProduct,
   },
   {
@@ -21,6 +23,11 @@ const routes = [
     path: '/products/add',
     component: AddProduct,
   },
+  {
+    path: '/cart',
+    component: CartComponent,
+  },
+  { path: '/:pathMatch(.*)', component: PageNotFound },
 ]
 
 const router = createRouter({
@@ -31,11 +38,11 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   const publicPages = ['/login']
   const authRequired = !publicPages.includes(to.path)
-  const user = localStorage.getItem('user-token')
-  if (authRequired && !user) {
+  const token = localStorage.getItem('access-token')
+  if (authRequired && !token) {
     return '/login'
   }
-  if (!authRequired && user) {
+  if (!authRequired && token) {
     return '/products'
   }
 })

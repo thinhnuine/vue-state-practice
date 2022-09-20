@@ -32,3 +32,7 @@ export const filterProduct = (sort, category) => {
     return axios.get(`https://fakestoreapi.com/products/category/${category}`)
   }
 }
+
+export const getCart = () => {
+  return axios.get(`https://fakestoreapi.com/carts/user/2`)
+}

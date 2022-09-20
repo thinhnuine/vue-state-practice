@@ -1,4 +1,5 @@
 <template>
+  <header-component />
   <div class="mx-10 my-10">
     <div v-if="loadingGetProducts" class="text-center">
       <a-spin size="large" />
@@ -8,7 +9,6 @@
         <a-button><router-link to="/products/add">Add new product</router-link></a-button>
         <a-select v-model:value="valueCategory" class="w-[120px]" :options="optionsCategory" placeholder="Category" />
         <a-select v-model:value="valueSort" class="w-[120px]" :options="optionsSort" placeholder="Sort" />
-        <a-button type="danger" @click="handleLogout">Log out</a-button>
       </a-space>
     </div>
     <a-table v-if="!loadingGetProducts" :data-source="products" :columns="columns">
@@ -32,6 +32,7 @@ import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { useFetcher } from '../compositions/useFetcher'
 import { deleteProduct, getProducts, filterProduct } from '../api'
+import HeaderComponent from './HeaderComponent.vue'
 
 const { loading: loadingOnDelete, execute: deleteProductAction, error: errorOnDelete } = useFetcher(deleteProduct)
 const { loading: loadingGetProducts, execute: getProductsAction, data: products } = useFetcher(getProducts)
@@ -61,9 +62,6 @@ const columns = ref([
     key: 'action',
   },
 ])
-const router = useRouter()
-const valueSort = ref(undefined)
-const valueCategory = ref(undefined)
 
 const optionsSort = ref([
   {
@@ -94,6 +92,9 @@ const optionsCategory = ref([
     label: "Men's clothing",
   },
 ])
+const router = useRouter()
+const valueSort = ref(undefined)
+const valueCategory = ref(undefined)
 
 const getListProduct = async () => {
   await getProductsAction()
@@ -101,11 +102,6 @@ const getListProduct = async () => {
 
 const handleEditProduct = (id) => {
   router.push(`/products/${id}`)
-}
-
-const handleLogout = () => {
-  localStorage.removeItem('user-token')
-  router.push('/login')
 }
 
 watchEffect(async () => {

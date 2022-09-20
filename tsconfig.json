@@ -9,8 +9,18 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "jsx": "preserve",
+    "allowJs": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/router.ts", "src/compositions/useFetcher.js", "src/api/index.js"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/router.ts",
+    "src/compositions/useFetcher.js",
+    "src/api/index.js"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

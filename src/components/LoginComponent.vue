@@ -37,7 +37,6 @@ import { useFetcher } from '../compositions/useFetcher'
 import { login } from '../api'
 import { message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
-
 const router = useRouter()
 const formState = ref({
   username: 'johnd',
@@ -53,8 +52,8 @@ const onFinish = async (values) => {
     return
   }
   if (data.value) {
-    localStorage.setItem('user-token', data.value.token)
+    localStorage.setItem('access-token', data.value.token)
   }
-  router.push('/products')
+  router.push('/')
 }
 </script>
