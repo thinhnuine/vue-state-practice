@@ -22,7 +22,6 @@
         </template>
       </template></a-table
     >
-    <p v-if="error" class="text-[#FF0000]">{{ error }}</p>
   </div>
 </template>
 
