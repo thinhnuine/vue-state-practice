@@ -31,7 +31,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useFetcher } from '../compositions/useFetcher'
 import { login } from '../api'

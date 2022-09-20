@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
@@ -111,7 +111,7 @@ watchEffect(async () => {
 
 const handleDeleteProduct = async (id) => {
   await deleteProductAction(id)
-  products.value = products.value.filter((item) => item.id !== id)
+  products.value = products?.value?.filter((item) => item.id !== id)
   if (!errorOnDelete) {
     message.error('Delete error')
   } else {

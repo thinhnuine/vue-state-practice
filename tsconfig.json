@@ -11,16 +11,9 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "jsx": "preserve",
-    "allowJs": true
+    "allowJs": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/router.ts",
-    "src/compositions/useFetcher.js",
-    "src/api/index.js"
-  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
