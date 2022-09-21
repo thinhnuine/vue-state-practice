@@ -1,5 +1,9 @@
 <template>
-  <a-page-header title="Vue State Practice" class="flex items-center justify-between border">
+  <a-page-header
+    title="Vue State Practice"
+    class="flex items-center justify-between border"
+    @back="() => router.push('/')"
+  >
     <div class="flex items-center gap-10">
       <a-badge :count="cartStore?.[0]?.products.length" color="gold" show-zero="false">
         <router-link to="/cart">
