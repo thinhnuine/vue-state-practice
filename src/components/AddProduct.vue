@@ -93,7 +93,7 @@ const handleSubmit = async () => {
 }
 
 onMounted(async () => {
-  if (id && id !== 'add') {
+  if (id) {
     try {
       await getDataProduct(id)
       formState.value = { ...data.value }
